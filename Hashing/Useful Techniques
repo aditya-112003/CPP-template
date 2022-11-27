@@ -1,0 +1,17 @@
+Hashing :-
+Basically making a new array to store the count of occurence of a given number in a given array correspoding to the index in the new array.
+eg Given array a={2,5,1,4,4,3,5} 
+Hashed array h={0,1,1,1,2,2}
+
+Prefix Sum:-
+Storing the sum of till i'th index of an array in a new array correspoding to the respective index.
+eg Given array a={2,5,1,4,4,3,5}    //use 1 base index in given array
+Prefix array p={2,7,8,12,16,19,24} 
+
+*-*
+Adding a multiple number 'n' to elements of a given zero array from index l to r .
+You can do so by adding 'n' to the l'th element and then substracting 'n' from the (r+1)'th element of the Given array
+Then take the prefix sum of the modified array which results in desired array 
+eg. given array={0,0,0,0,0,0}
+add 3 from 2 to 4 and 4 from 3 to 5
+desired array be prefix sum of {0,+4,0,+5,-4,0,-5}
