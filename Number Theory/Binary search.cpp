@@ -61,4 +61,32 @@ int main(){
     cin>>x;
     upperbound(v,x);
     return 0;
+    
+}// eg. question of N'th root of some number 
+
+double eps=1e-6;
+
+double multiply(double x,ll n){
+    double ans=1;
+    while(n--) {
+        ans=ans*x;
+    }
+    return ans;
 }
+
+int main(){
+    double x;
+    ll n;
+    cin>>x>>n;
+    double b=1,f=x,mid=0;
+    // cout<<multiply(x,n)<<endl;
+    while(f-b>eps){
+        mid=(f+b)/2;
+        if(multiply(mid,n)<x) b=mid;
+        else f=mid;
+    }
+    cout<<f<<endl;
+}
+
+// Time Complexity : p*log(n*10^d)
+// p'th root , n is the number , d is the level of precision 
