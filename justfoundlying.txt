@@ -1,0 +1,1 @@
+1 - For any given array , all possible (x)Means formed my combination of elements (repetetion allowed) always lies between minimum and maximum element of the array .
