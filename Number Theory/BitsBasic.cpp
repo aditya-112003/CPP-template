@@ -47,5 +47,10 @@ int main(){
     cout<<__builtin_popcount(n)<<'\n';         // gives no. of set bits
     cout<<__builtin_popcountll((1LL<<35)-1)<<'\n';
 
+    // GCD and LCM of a number 
+    
+    gcd=__gcd(a,b);
+    lcm = a*b/(__gcd(a,b);
+    
     return 0;
 }
