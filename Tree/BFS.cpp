@@ -7,8 +7,6 @@ int visited[N];
 int level[N];
 vector<ll> graph[N];
 
-
-
 void bfs (int source){
     queue<int> q;
     q.push(source);

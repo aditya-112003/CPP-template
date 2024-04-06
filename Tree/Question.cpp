@@ -1,88 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int visited[8][8];
-int level[8][8];
-
-int coordX(string source)
+class Solution
 {
-    return source[0] - 'a';
-}
+public:
+    const int N = 1e5 + 10;
 
-int coordY(string source)
-{
-    return source[1] - '1';
-}
-
-vector<pair<int, int>> movements = {
-    {1, 2},
-    {1, -2},
-    {-1, 2},
-    {-1, -2},
-    {2, 1},
-    {2, -1},
-    {-2, 1},
-    {-2, -1},
-};
-
-bool isValid(pair<int, int> move)
-{
-    return move.first <= 7 && move.first >= 0 && move.second >= 0 && move.second <= 7;
-}
-
-void bfs(int sourceX, int sourceY)
-{
-    queue<pair<int, int>> q;
-    q.push({sourceX, sourceY});
-    visited[sourceX][sourceY] = 1;
-    level[sourceX][sourceY] = 0;
-    while (!q.empty())
+    int minFinder(int source, vector<pair<int, int>> graph[], int n)
     {
-        int parX = q.front().first;
-        int parY = q.front().second;
-        q.pop();
-        for (auto movement : movements)
+        vector<bool> visited(N, false);
+        vector<int> dist(N, 1e9 + 10);
+
+        set<pair<int, int>> q;
+        q.insert({0, source});
+        dist[source] = 0;
+
+        while (q.size() > 0)
         {
-            int childX = parX + movement.first;
-            int childY = parY + movement.second;
-            if (!isValid({childX, childY}))
+            auto par = *q.begin();
+            q.erase(q.begin());
+            if (visited[par.second])
                 continue;
-            if (visited[childX][childY])
-                continue;
-            q.push({childX, childY});
-            level[childX][childY] = level[parX][parY] + 1;
-            visited[childX][childY] = 1;
+            visited[par.second] = true;
+            for (auto child : graph[par.second])
+            {
+                if (dist[par.second] + par.first >= dist[child.second])
+                    continue;
+                dist[child.second] = dist[par.second] + par.first;
+                q.insert({dist[child.second], child.second});
+            }
         }
-    }
-}
-
-void reset ()
-{
-    for(int i = 0 ; i < 8 ; i ++){
-        for( int j = 0 ; j < 8 ; j ++){
-            level[i][j]=0;
-            visited[i][j]=0;
+        int maxy = -1;
+        for (auto i : dist)
+        {
+            maxy = max(i, maxy);
         }
+        return maxy;
     }
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    int t = 1;
-    cin >> t;
-    while (t--)
+    int networkDelayTime(vector<vector<int>> &times, int n, int k)
     {
-        string a, b;
-        cin >> a >> b;
-        int sourceX = coordX(a);
-        int sourceY = coordY(a);
-        int destX = coordX(b);
-        int destY = coordY(b);
-        bfs(sourceX, sourceY);
-        cout << level[destX][destY] << '\n';
-        reset();
+        vector<pair<int, int>> graph[n];
+        int m = times.size();
+        for (int i = 0; i < m; i++)
+        {
+            graph[times[i][0]].push_back({times[i][2], times[i][1]});
+        }
+        cout<< minFinder(k, graph, n) <<'\n';
     }
-    return 0;
-}
+};
