@@ -17,16 +17,21 @@ void dijkstra(ll source)
     while (q.size() > 0)
     {
         auto par = *q.begin();
+        ll node = par.second;
+        ll node_dist = par.first;
         q.erase(q.begin());
-        if (visited[par.second])
+        if (visited[node])
             continue;
-        visited[par.second] = true;
-        for (auto child : g[par.second])
+        visited[node] = true;
+        for (auto child : g[node])
         {
-            if (dist[par.second] + par.first >= dist[child.second])
-                continue;
-            dist[child.second] = dist[par.second] + par.first;
-            q.insert({dist[child.second], child.second});
+            ll wt = child.second;
+            ll child_node = child.first;
+            if (dist[node] + wt < dist[child_node])
+            {
+                dist[child_node] = dist[node] + wt;
+                q.insert({dist[child_node], child_node});
+            }
         }
     }
 }
