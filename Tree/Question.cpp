@@ -1,50 +1,71 @@
+// https://codeforces.com/problemset/problem/295/B
+
 #include <bits/stdc++.h>
 using namespace std;
+#define ll long long
 
-class Solution
+const int N = 510;
+const int INF = 1e9 + 10;
+
+ll dist[N][N];
+
+void solve()
 {
-public:
-    const int N = 1e5 + 10;
-
-    int minFinder(int source, vector<pair<int, int>> graph[], int n)
+    ll n;
+    cin >> n;
+    for (ll i = 1; i <= n; i++)
     {
-        vector<bool> visited(N, false);
-        vector<int> dist(N, 1e9 + 10);
-
-        set<pair<int, int>> q;
-        q.insert({0, source});
-        dist[source] = 0;
-
-        while (q.size() > 0)
+        for (ll j = 1; j <= n; j++)
         {
-            auto par = *q.begin();
-            q.erase(q.begin());
-            if (visited[par.second])
-                continue;
-            visited[par.second] = true;
-            for (auto child : graph[par.second])
+            cin >> dist[i][j];
+        }
+    }
+
+    vector<ll> v(n), ans;
+    for (ll i = 0; i < n; i++)
+    {
+        cin >> v[i];
+    }
+    reverse(v.begin(), v.end());
+
+    for (ll k = 0; k < n; k++)
+    {
+        ll node = v[k];
+        for (ll i = 1; i <= n; i++)
+        {
+            for (ll j = 1; j <= n; j++)
             {
-                if (dist[par.second] + par.first >= dist[child.second])
-                    continue;
-                dist[child.second] = dist[par.second] + par.first;
-                q.insert({dist[child.second], child.second});
+                dist[i][j] = min(dist[i][j], dist[i][node] + dist[node][j]);
             }
         }
-        int maxy = -1;
-        for (auto i : dist)
+
+        ll sum = 0;
+        for (ll i = 0; i <= k; i++)
         {
-            maxy = max(i, maxy);
+            for (ll j = 0; j <= k; j++)
+            {
+                sum += dist[v[i]][v[j]];
+            }
         }
-        return maxy;
+        // cout << sum << " ";
+        ans.push_back(sum);
     }
-    int networkDelayTime(vector<vector<int>> &times, int n, int k)
+    cout << endl;
+    reverse(ans.begin(), ans.end());
+    for (auto i : ans)
     {
-        vector<pair<int, int>> graph[n];
-        int m = times.size();
-        for (int i = 0; i < m; i++)
-        {
-            graph[times[i][0]].push_back({times[i][2], times[i][1]});
-        }
-        cout<< minFinder(k, graph, n) <<'\n';
+        cout << i << " ";
     }
-};
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    ll t = 1;
+    while (t--)
+    {
+        solve();
+    }
+    return 0;
+}
