@@ -1,61 +1,113 @@
-// https://codeforces.com/problemset/problem/295/B
-
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 
-const int N = 510;
-const int INF = 1e9 + 10;
+const int N = 1e5 + 10;
 
-ll dist[N][N];
+int parent[N];
+int size[N];
+
+void make(int v)
+{
+    parent[v] = v;
+    size[v] = 1;
+}
+
+int find(int v)
+{
+    if (v == parent[v])
+        return v;
+    return parent[v] = find(parent[v]);
+}
+
+void Union(int a, int b)
+{
+    ll par_A = find(a);
+    ll par_B = find(b);
+    if (par_A == par_B)
+        return;
+    if (size[par_A] < size[par_B])
+        swap(par_A, par_B);
+    parent[par_B] = par_A;
+    size[par_A] += size[par_B];
+}
 
 void solve()
 {
     ll n;
     cin >> n;
+    ll k = n;
+    vector<pair<ll, ll>> node;
+    vector<pair<ll, pair<ll, ll>>> edges;
+    while (k--)
+    {
+        ll x, y;
+        cin >> x >> y;
+        node.push_back({x, y});
+    }
+    vector<ll> powerStation(n + 1);
+    vector<ll> wire(n + 1);
+    for (ll i = 1; i <= n; i++)
+    {
+        cin >> powerStation[i];
+    }
+    for (ll i = 1; i <= n; i++)
+    {
+        cin >> wire[i];
+    }
     for (ll i = 1; i <= n; i++)
     {
         for (ll j = 1; j <= n; j++)
         {
-            cin >> dist[i][j];
-        }
-    }
-
-    vector<ll> v(n), ans;
-    for (ll i = 0; i < n; i++)
-    {
-        cin >> v[i];
-    }
-    reverse(v.begin(), v.end());
-
-    for (ll k = 0; k < n; k++)
-    {
-        ll node = v[k];
-        for (ll i = 1; i <= n; i++)
-        {
-            for (ll j = 1; j <= n; j++)
+            if (i == j)
             {
-                dist[i][j] = min(dist[i][j], dist[i][node] + dist[node][j]);
+                edges.push_back({powerStation[i], {i, 0}});
+                continue;
             }
+            ll dist = (wire[i] + wire[j]) * (abs(node[i - 1].first - node[j - 1].first) + abs(node[i - 1].second - node[j - 1].second));
+            edges.push_back({dist, {i, j}});
         }
-
-        ll sum = 0;
-        for (ll i = 0; i <= k; i++)
-        {
-            for (ll j = 0; j <= k; j++)
-            {
-                sum += dist[v[i]][v[j]];
-            }
-        }
-        // cout << sum << " ";
-        ans.push_back(sum);
     }
     cout << endl;
-    reverse(ans.begin(), ans.end());
-    for (auto i : ans)
+    sort(edges.begin(), edges.end());
+    for (ll i = 0; i <= n; i++)
+    {
+        make(i);
+    }
+    vector<ll> ans_station;
+    vector<pair<ll, ll>> ans_wire;
+    ll totatCost = 0;
+    for (auto &edge : edges)
+    {
+        // cout << edge.first << ":" << edge.second.first << ":" << edge.second.second << " ";
+        ll wt = edge.first;
+        ll u = edge.second.first;
+        ll v = edge.second.second;
+        if (find(u) == find(v))
+            continue;
+        Union(u, v);
+        totatCost += wt;
+        if (v == 0)
+        {
+            ans_station.push_back(u);
+            continue;
+        }
+        ans_wire.push_back({u, v});
+    }
+    cout << endl;
+    cout << totatCost << '\n';
+    cout << ans_station.size() << '\n';
+    for (auto i : ans_station)
     {
         cout << i << " ";
     }
+    cout << '\n';
+    cout << ans_wire.size() << '\n';
+    for (auto i : ans_wire)
+    {
+        cout << i.first << " " << i.second << '\n';
+    }
+    cout << '\n';
 }
 
 int main()

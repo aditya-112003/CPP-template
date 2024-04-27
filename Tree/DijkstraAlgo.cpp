@@ -5,6 +5,7 @@ const ll N = 1e5 + 10;
 
 vector<pair<ll, ll>> g[N];
 
+// O(V + Elog(V));
 void dijkstra(ll source)
 {
     vector<bool> visited(N, false);
